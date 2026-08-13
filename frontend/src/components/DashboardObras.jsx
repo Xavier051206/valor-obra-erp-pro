@@ -24,7 +24,7 @@ export default function DashboardObras({
   const obrasAMostrar = mostrarHistorial ? obrasFinalizadas : obrasActivas;
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/global-resumen')
+    axios.get('valor-obra-erp-pro.railway.internal/api/global-resumen')
       .then(res => setResumenGlobal(res.data))
       .catch(err => console.error("Error cargando resumen global", err));
   }, [proyectos]);

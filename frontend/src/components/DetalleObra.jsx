@@ -31,17 +31,17 @@ export default function DetalleObra({
 
   useEffect(() => {
     cargarDatosObra();
-    axios.get('http://localhost:3000/api/tasas/actual').then(res => {
+    axios.get('valor-obra-erp-pro.railway.internal/api/tasas/actual').then(res => {
       if (res.data?.tasa_bcv_usd) setTasaHoyGlobal(res.data.tasa_bcv_usd);
     }).catch(() => {});
   }, [obra.id]);
 
   const cargarDatosObra = () => {
-    axios.get(`http://localhost:3000/api/objetivos/${obra.id}`)
+    axios.get(`valor-obra-erp-pro.railway.internal/api/objetivos/${obra.id}`)
       .then(res => setHitos(res.data))
       .catch(err => console.error("Error cargando hitos:", err));
 
-    axios.get(`http://localhost:3000/api/proyectos/${obra.id}/detalle`)
+    axios.get(`valor-obra-erp-pro.railway.internal/api/proyectos/${obra.id}/detalle`)
       .then(res => {
         setPresupuestos(res.data.presupuestos);
         setPagosComision(res.data.pagos_comision || []);
@@ -54,7 +54,7 @@ export default function DetalleObra({
 
   const toggleHito = (id, estadoActual) => {
     if (obraFinalizada) return;
-    axios.patch(`http://localhost:3000/api/objetivos/${id}`, { completado: !estadoActual })
+    axios.patch(`valor-obra-erp-pro.railway.internal/api/objetivos/${id}`, { completado: !estadoActual })
       .then(() => setHitos(hitos.map(h => h.id === id ? { ...h, completado: !estadoActual } : h)))
       .catch(err => console.error("Error actualizando hito:", err));
   };
@@ -65,7 +65,7 @@ export default function DetalleObra({
   const agregarNuevoHito = (e) => {
     e.preventDefault();
     if (!nuevoHitoTexto.trim() || obraFinalizada) return;
-    axios.post('http://localhost:3000/api/objetivos', { 
+    axios.post('valor-obra-erp-pro.railway.internal/api/objetivos', { 
         proyecto_id: obra.id, 
         descripcion: nuevoHitoTexto.trim(),
         presupuesto_id: basePresupuestoId 
@@ -82,7 +82,7 @@ export default function DetalleObra({
     const textoExtra = nuevoHitoExtraTextos[presupuestoId];
     if (!textoExtra?.trim() || obraFinalizada) return;
     
-    axios.post('http://localhost:3000/api/objetivos', { 
+    axios.post('valor-obra-erp-pro.railway.internal/api/objetivos', { 
         proyecto_id: obra.id, 
         descripcion: textoExtra.trim(),
         presupuesto_id: presupuestoId 
@@ -109,7 +109,7 @@ export default function DetalleObra({
   const registrarPagoComision = (e) => {
     e.preventDefault();
     if (!montoPagoRaw || !tasaPagoComision) return alert("Completa los datos del pago.");
-    axios.post('http://localhost:3000/api/pagos-comision', {
+    axios.post('valor-obra-erp-pro.railway.internal/api/pagos-comision', {
       proyecto_id: obra.id,
       moneda_usada: monedaPago,
       monto_original: parseFloat(montoPagoRaw),
@@ -126,7 +126,7 @@ export default function DetalleObra({
 
   const finalizarObraTotal = () => {
     if (!window.confirm("¿Seguro que deseas FINALIZAR esta obra? Generará el reporte ejecutivo de cierre.")) return;
-    axios.post(`http://localhost:3000/api/proyectos/${obra.id}/finalizar`)
+    axios.post(`valor-obra-erp-pro.railway.internal/api/proyectos/${obra.id}/finalizar`)
       .then(() => {
         setObraFinalizada(true);
         setHitos(hitos.map(h => ({ ...h, completado: true })));

@@ -127,7 +127,7 @@ export default function App() {
   }
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/tasas/actual')
+    axios.get('valor-obra-erp-pro.railway.internal/api/tasas/actual')
       .then(response => {
         setTasaHoy(response.data);
         if (response.data?.tasa_bcv_usd) {
@@ -152,20 +152,20 @@ export default function App() {
   }, [obraSeleccionada]);
 
   const cargarProyectos = () => {
-    axios.get('http://localhost:3000/api/proyectos')
+    axios.get('valor-obra-erp-pro.railway.internal/api/proyectos')
       .then(res => setProyectos(res.data))
       .catch(err => console.error("Error cargando proyectos:", err));
   };
 
   const cargarTransacciones = (proyectoId) => {
-    axios.get(`http://localhost:3000/api/transacciones/${proyectoId}`)
+    axios.get(`valor-obra-erp-pro.railway.internal/api/transacciones/${proyectoId}`)
       .then(res => setTransacciones(res.data))
       .catch(err => console.error("Error cargando transacciones:", err));
   };
 
   const manejarLogin = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:3000/api/login', { username: usernameInput, password: passwordInput })
+    axios.post('valor-obra-erp-pro.railway.internal/api/login', { username: usernameInput, password: passwordInput })
       .then(res => {
         if (res.data.success) {
           setSistemaDesbloqueado(true);
@@ -192,7 +192,7 @@ export default function App() {
     e.preventDefault();
     if (!nombreObra || !clienteObra || !costoEstimadoRaw) return alert("Por favor completa los campos obligatorios.");
 
-    axios.post('http://localhost:3000/api/proyectos-completo', {
+    axios.post('valor-obra-erp-pro.railway.internal/api/proyectos-completo', {
       nombre: nombreObra,
       cliente: clienteObra,
       ubicacion: ubicacionObra,
@@ -217,7 +217,7 @@ export default function App() {
     e.preventDefault();
     if (!montoOriginalRaw || !tasaRecepcion) return alert("Por favor coloca los dólares a comprar y la tasa.");
 
-    axios.post('http://localhost:3000/api/comprar-dolares', {
+    axios.post('valor-obra-erp-pro.railway.internal/api/comprar-dolares', {
         proyecto_id: obraSeleccionada.id,
         monto_usd: parseFloat(montoOriginalRaw),
         tasa_compra: parseFloat(tasaRecepcion),
@@ -234,7 +234,7 @@ export default function App() {
     e.preventDefault();
     if (!montoOriginalRaw || !tasaRecepcion || !conceptoTransaccion) return alert("Por favor completa todos los campos.");
 
-    axios.post('http://localhost:3000/api/transacciones', {
+    axios.post('valor-obra-erp-pro.railway.internal/api/transacciones', {
       proyecto_id: obraSeleccionada.id,
       tipo: tipoTransaccionActual,
       categoria: categoriaTransaccion,
@@ -259,7 +259,7 @@ export default function App() {
     e.preventDefault();
     if (!descripcionExtra || !costoExtraRaw) return alert("Completa la descripción y el costo del trabajo extra.");
 
-    axios.post(`http://localhost:3000/api/proyectos/${obraSeleccionada.id}/presupuestos-extra`, {
+    axios.post(`valor-obra-erp-pro.railway.internal/api/proyectos/${obraSeleccionada.id}/presupuestos-extra`, {
       descripcion: descripcionExtra,
       costo_estimado_usd: costoExtraNum,
       tipo_ganancia: tipoGananciaExtra,
